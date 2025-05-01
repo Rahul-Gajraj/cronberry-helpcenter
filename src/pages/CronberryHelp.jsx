@@ -12,6 +12,7 @@ import {
   LineChart,
   Zap,
   Play,
+  UserRoundCog,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -24,30 +25,33 @@ const FallbackImage = ({ src, alt }) => (
   />
 );
 
-const iconMap = {
-  "Get Started": <Play size={18} className="inline mr-2 text-blue-600" />,
-  "Lead Management": (
-    <BookOpen size={18} className="inline mr-2 text-blue-600" />
-  ),
-  "Reports and Analytics": (
-    <LineChart size={18} className="inline mr-2 text-blue-600" />
-  ),
-  "Marketing Automation": (
-    <Zap size={18} className="inline mr-2 text-blue-600" />
-  ),
-  Integrations: <Mail size={18} className="inline mr-2 text-blue-600" />,
-  Configuration: <Settings size={18} className="inline mr-2 text-blue-600" />,
-  "Invoice & Quotation": (
-    <FileText size={18} className="inline mr-2 text-blue-600" />
-  ),
-  IVR: <Phone size={18} className="inline mr-2 text-blue-600" />,
-  WABA: <MessageSquare size={18} className="inline mr-2 text-blue-600" />,
-  "User Management": <></>,
-};
+// const iconMap = {
+//   "Get Started": <Play size={18} className="inline mr-2 text-blue-600" />,
+//   "Lead Management": (
+//     <BookOpen size={18} className="inline mr-2 text-blue-600" />
+//   ),
+//   "Reports and Analytics": (
+//     <LineChart size={18} className="inline mr-2 text-blue-600" />
+//   ),
+//   "Marketing Automation": (
+//     <Zap size={18} className="inline mr-2 text-blue-600" />
+//   ),
+//   Integrations: <Mail size={18} className="inline mr-2 text-blue-600" />,
+//   Configuration: <Settings size={18} className="inline mr-2 text-blue-600" />,
+//   "Invoice & Quotation": (
+//     <FileText size={18} className="inline mr-2 text-blue-600" />
+//   ),
+//   IVR: <Phone size={18} className="inline mr-2 text-blue-600" />,
+//   WABA: <MessageSquare size={18} className="inline mr-2 text-blue-600" />,
+//   "User Management": (
+//     <UserRoundCog size={18} className="inline mr-2 text-blue-600" />
+//   ),
+// };
 
 const CronberryHelp = () => {
   const [helpTopics, setHelpTopics] = useState([]);
   const [filteredTopics, setFilteredTopics] = useState([]);
+  const [iconMaps, setIconMaps] = useState(null);
   const [selectedTopic, setSelectedTopic] = useState("");
   const [search, setSearch] = useState("");
   const [expandedCategory, setExpandedCategory] = useState(null);
@@ -62,10 +66,23 @@ const CronberryHelp = () => {
     )
       .then((res) => res.json())
       .then((data) => {
+        let tempIconMap = {};
         const grouped = data.reduce((acc, item) => {
           const category = item["Category"];
-          if (!category || !iconMap[category]) return acc;
+          if (!category) return acc;
           if (!acc[category]) acc[category] = [];
+          if (!tempIconMap[category]) {
+            tempIconMap = {
+              ...tempIconMap,
+              [category]: (
+                <img
+                  src={item["Icon Url"]}
+                  alt={category}
+                  style={{ height: "25px" }}
+                />
+              ),
+            };
+          }
           acc[category].push({
             title: item["Title"],
             content: item["Content"],
@@ -74,8 +91,10 @@ const CronberryHelp = () => {
           });
           return acc;
         }, {});
+        // console.log(tempIconMap);
+        setIconMaps(tempIconMap);
 
-        const formatted = Object.entries(iconMap).map(([category]) => ({
+        const formatted = Object.entries(tempIconMap).map(([category]) => ({
           category,
           topics: grouped[category] || [],
         }));
@@ -132,48 +151,50 @@ const CronberryHelp = () => {
           className="mb-5 rounded-md"
         />
         <ScrollArea className="h-[calc(100vh-160px)] pr-1">
-          {filteredTopics.map((group, i) => (
-            <div key={i} className="mb-5">
-              <button
-                className="w-full flex items-center gap-2 text-left font-medium text-gray-700 hover:text-blue-700 transition-colors text-base py-1.5 cursor-pointer"
-                onClick={() =>
-                  setExpandedCategory(expandedCategory === i ? null : i)
-                }
-              >
-                {iconMap[group.category]} {group.category}
-              </button>
-              <AnimatePresence initial={false}>
-                {expandedCategory === i && (
-                  <motion.ul
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="mt-1 pl-6 space-y-1 overflow-hidden"
-                  >
-                    {group.topics.length > 0 ? (
-                      group.topics.map((topic, j) => (
-                        <li
-                          key={j}
-                          onClick={() => setSelectedTopic(topic)}
-                          className={`cursor-pointer py-1 px-2 rounded-md text-sm leading-snug hover:bg-blue-50 hover:text-blue-700 transition ${
-                            selectedTopic?.title === topic.title
-                              ? "bg-blue-100 text-blue-700 font-medium"
-                              : "text-gray-600"
-                          }`}
-                        >
-                          {topic.title}
+          {iconMaps &&
+            filteredTopics.map((group, i) => (
+              <div key={i} className="mb-5">
+                <button
+                  className="w-full flex items-center gap-2 text-left font-medium text-gray-700 hover:text-blue-700 transition-colors text-base py-1.5 cursor-pointer"
+                  onClick={() =>
+                    setExpandedCategory(expandedCategory === i ? null : i)
+                  }
+                >
+                  {iconMaps[group.category]} {group.category}
+                  {/* {iconMap[group.category]} {group.category} */}
+                </button>
+                <AnimatePresence initial={false}>
+                  {expandedCategory === i && (
+                    <motion.ul
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="mt-1 pl-6 space-y-1 overflow-hidden"
+                    >
+                      {group.topics.length > 0 ? (
+                        group.topics.map((topic, j) => (
+                          <li
+                            key={j}
+                            onClick={() => setSelectedTopic(topic)}
+                            className={`cursor-pointer py-1 px-2 rounded-md text-sm leading-snug hover:bg-blue-50 hover:text-blue-700 transition ${
+                              selectedTopic?.title === topic.title
+                                ? "bg-blue-100 text-blue-700 font-medium"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            {topic.title}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="text-gray-400 text-sm pl-2">
+                          No articles yet
                         </li>
-                      ))
-                    ) : (
-                      <li className="text-gray-400 text-sm pl-2">
-                        No articles yet
-                      </li>
-                    )}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+                      )}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
         </ScrollArea>
       </div>
 
