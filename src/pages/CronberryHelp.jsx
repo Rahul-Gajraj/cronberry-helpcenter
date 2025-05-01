@@ -41,6 +41,7 @@ const iconMap = {
   ),
   IVR: <Phone size={18} className="inline mr-2 text-blue-600" />,
   WABA: <MessageSquare size={18} className="inline mr-2 text-blue-600" />,
+  "User Management": <></>,
 };
 
 const CronberryHelp = () => {
