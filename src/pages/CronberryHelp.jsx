@@ -13,6 +13,7 @@ import {
   Zap,
   Play,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const FallbackImage = ({ src, alt }) => (
   <img
@@ -86,6 +87,9 @@ const CronberryHelp = () => {
         const firstTopic =
           formatted.find((g) => g.topics.length)?.topics[0] || "";
         setSelectedTopic(firstTopic);
+      })
+      .catch((err) => {
+        toast.error("Unable to fetch data from sheet");
       });
   };
 
