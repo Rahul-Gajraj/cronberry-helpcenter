@@ -45,6 +45,7 @@ const iconMap = {
 
 const CronberryHelp = () => {
   const [helpTopics, setHelpTopics] = useState([]);
+  const [filteredTopics, setFilteredTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("");
   const [search, setSearch] = useState("");
   const [expandedCategory, setExpandedCategory] = useState(null);
@@ -78,6 +79,7 @@ const CronberryHelp = () => {
         }));
 
         setHelpTopics(formatted);
+        setFilteredTopics(formatted);
 
         // Auto-select the first available topic
         const firstTopic =
@@ -86,12 +88,22 @@ const CronberryHelp = () => {
       });
   };
 
-  const filteredTopics = helpTopics.map((group) => ({
-    ...group,
-    topics: group.topics.filter((t) =>
-      t.title?.toLowerCase().includes(search.toLowerCase())
-    ),
-  }));
+  const filterData = (searchQuery) => {
+    let tempFilteredTopics = [];
+    helpTopics.map((group) => {
+      const tempTopics = group.topics.filter((t) =>
+        t.title?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      if (tempTopics.length > 0) {
+        tempFilteredTopics.push({ ...group, topics: tempTopics });
+      }
+    });
+    setFilteredTopics(tempFilteredTopics);
+    setExpandedCategory(0);
+    // const firstTopic =
+    //   tempFilteredTopics.find((g) => g.topics.length)?.topics[0] || "";
+    // setSelectedTopic(firstTopic);
+  };
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100">
@@ -103,7 +115,15 @@ const CronberryHelp = () => {
         <Input
           placeholder="Search help..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            if (e.target.value.length > 0) {
+              filterData(e.target.value);
+            } else {
+              setFilteredTopics(helpTopics);
+              setExpandedCategory(null);
+            }
+          }}
           className="mb-5 rounded-md"
         />
         <ScrollArea className="h-[calc(100vh-160px)] pr-1">
@@ -161,9 +181,6 @@ const CronberryHelp = () => {
                 <h2 className="text-3xl font-semibold text-blue-800">
                   {selectedTopic.title}
                 </h2>
-                <button className="text-sm text-gray-500 hover:text-blue-600 cursor-pointer">
-                  Was this helpful?
-                </button>
               </div>
 
               <div className="prose max-w-none text-gray-800 space-y-4">
