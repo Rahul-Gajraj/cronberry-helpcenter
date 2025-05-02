@@ -132,7 +132,7 @@ const CronberryHelp = () => {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="md:w-1/4 w-full bg-white border-r px-6 py-6 shadow-md overflow-y-auto text-[15px]">
+      <div className="md:w-1/4 w-full bg-white px-6 py-6 shadow-md overflow-y-auto text-[15px]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 tracking-wide">
           Help Center
         </h2>
@@ -200,10 +200,10 @@ const CronberryHelp = () => {
 
       {/* Content Area */}
       <div className="flex-1 px-4 md:px-10 py-6 overflow-y-auto">
-        <div className="max-w-4xl mx-auto">
+        <div className="mx-auto w-full h-full">
           {selectedTopic ? (
-            <div className="bg-white shadow-xl rounded-xl p-8 space-y-6 transition-all duration-300">
-              <div className="flex justify-between items-start border-b pb-4">
+            <div className="bg-white shadow-xl rounded-xl p-8 space-y-6 transition-all duration-300 h-full">
+              <div className="flex justify-between items-start border-b border-gray-200 pb-4">
                 <h2 className="text-3xl font-semibold text-blue-800">
                   {selectedTopic.title}
                 </h2>
@@ -236,7 +236,7 @@ const CronberryHelp = () => {
                 />
               )}
 
-              <div className="mt-6 pt-4 border-t">
+              <div className="mt-6 pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-500 mb-2">
                   Was this article helpful?
                 </p>
