@@ -25,28 +25,28 @@ const FallbackImage = ({ src, alt }) => (
   />
 );
 
-// const iconMap = {
-//   "Get Started": <Play size={18} className="inline mr-2 text-blue-600" />,
-//   "Lead Management": (
-//     <BookOpen size={18} className="inline mr-2 text-blue-600" />
-//   ),
-//   "Reports and Analytics": (
-//     <LineChart size={18} className="inline mr-2 text-blue-600" />
-//   ),
-//   "Marketing Automation": (
-//     <Zap size={18} className="inline mr-2 text-blue-600" />
-//   ),
-//   Integrations: <Mail size={18} className="inline mr-2 text-blue-600" />,
-//   Configuration: <Settings size={18} className="inline mr-2 text-blue-600" />,
-//   "Invoice & Quotation": (
-//     <FileText size={18} className="inline mr-2 text-blue-600" />
-//   ),
-//   IVR: <Phone size={18} className="inline mr-2 text-blue-600" />,
-//   WABA: <MessageSquare size={18} className="inline mr-2 text-blue-600" />,
-//   "User Management": (
-//     <UserRoundCog size={18} className="inline mr-2 text-blue-600" />
-//   ),
-// };
+const iconMap = {
+  "Get Started": <Play size={18} className="inline mr-2 text-blue-600" />,
+  "Lead Management": (
+    <BookOpen size={18} className="inline mr-2 text-blue-600" />
+  ),
+  "Reports and Analytics": (
+    <LineChart size={18} className="inline mr-2 text-blue-600" />
+  ),
+  "Marketing Automation": (
+    <Zap size={18} className="inline mr-2 text-blue-600" />
+  ),
+  Integrations: <Mail size={18} className="inline mr-2 text-blue-600" />,
+  Configuration: <Settings size={18} className="inline mr-2 text-blue-600" />,
+  "Invoice & Quotation": (
+    <FileText size={18} className="inline mr-2 text-blue-600" />
+  ),
+  IVR: <Phone size={18} className="inline mr-2 text-blue-600" />,
+  WABA: <MessageSquare size={18} className="inline mr-2 text-blue-600" />,
+  "User Management": (
+    <UserRoundCog size={18} className="inline mr-2 text-blue-600" />
+  ),
+};
 
 const CronberryHelp = () => {
   const [helpTopics, setHelpTopics] = useState([]);
@@ -160,8 +160,8 @@ const CronberryHelp = () => {
                     setExpandedCategory(expandedCategory === i ? null : i)
                   }
                 >
-                  {iconMaps[group.category]} {group.category}
-                  {/* {iconMap[group.category]} {group.category} */}
+                  {/* {iconMaps[group.category]} {group.category} */}
+                  {iconMap[group.category]} {group.category}
                 </button>
                 <AnimatePresence initial={false}>
                   {expandedCategory === i && (
