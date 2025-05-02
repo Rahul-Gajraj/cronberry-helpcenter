@@ -1,2 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
+.support_img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(58%) saturate(4890%)
+    hue-rotate(218deg) brightness(99%) contrast(250%);
+}

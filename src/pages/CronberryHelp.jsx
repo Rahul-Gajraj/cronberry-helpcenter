@@ -13,6 +13,7 @@ import {
   Zap,
   Play,
   UserRoundCog,
+  CircleEllipsis,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -46,6 +47,16 @@ const iconMap = {
   "User Management": (
     <UserRoundCog size={18} className="inline mr-2 text-blue-600" />
   ),
+  "Support & Training": (
+    <img
+      className="support_img"
+      src="/support.png"
+      alt="support"
+      height={20}
+      width={20}
+    />
+  ),
+  Others: <CircleEllipsis size={18} className="inline mr-2 text-blue-600" />,
 };
 
 const CronberryHelp = () => {
