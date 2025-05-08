@@ -17,15 +17,22 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-const FallbackImage = ({ src, alt }) => (
-  <img
-    src={src}
-    alt={alt}
-    onError={(e) => (e.currentTarget.style.display = "none")}
-    className="rounded-lg border shadow-md w-full max-h-[400px] object-contain"
-  />
-);
-
+const FallbackImage = ({ src, alt, getPreviewLink }) => {
+  return (
+    // <img
+    //   src={getImageLink(src)}
+    //   alt={alt}
+    //   // onError={(e) => (e.currentTarget.style.display = "none")}
+    //   className="rounded-lg border shadow-md w-full max-h-[400px] object-contain"
+    // />
+    <iframe
+      src={getPreviewLink(src)}
+      width="100%"
+      height="400"
+      allow="autoplay"
+    ></iframe>
+  );
+};
 const iconMap = {
   "Get Started": <Play size={18} className="inline mr-2 text-blue-600" />,
   "Lead Management": (
@@ -102,7 +109,6 @@ const CronberryHelp = () => {
           });
           return acc;
         }, {});
-        // console.log(tempIconMap);
         setIconMaps(tempIconMap);
 
         const formatted = Object.entries(tempIconMap).map(([category]) => ({
@@ -127,6 +133,14 @@ const CronberryHelp = () => {
     const match = url.match(/\/file\/d\/([^/]+)\//);
     if (match && match[1]) {
       return `https://drive.google.com/file/d/${match[1]}/preview`;
+    }
+    return url;
+  };
+
+  const getImageLink = (url) => {
+    const match = url.match(/\/file\/d\/([^/]+)\//) || url.match(/id=([^&]+)/);
+    if (match && match[1]) {
+      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
     }
     return url;
   };
@@ -227,7 +241,6 @@ const CronberryHelp = () => {
                   {selectedTopic.title}
                 </h2>
               </div>
-
               <div className="prose max-w-none text-gray-800 space-y-4">
                 {selectedTopic.content?.split("\n").map((line, i) => (
                   <p key={i} className="leading-relaxed">
@@ -256,14 +269,13 @@ const CronberryHelp = () => {
                   </video> */}
                 </div>
               )}
-
               {!selectedTopic.video && selectedTopic.image && (
                 <FallbackImage
                   src={selectedTopic.image}
                   alt={selectedTopic.title}
+                  getPreviewLink={getPreviewLink}
                 />
               )}
-
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-500 mb-2">
                   Was this article helpful?
