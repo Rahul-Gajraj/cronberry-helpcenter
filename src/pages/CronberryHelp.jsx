@@ -97,8 +97,8 @@ const CronberryHelp = () => {
           acc[category].push({
             title: item["Title"],
             content: item["Content"],
-            image: item["Image URL"],
-            video: item["Video URL"],
+            image: item["Image Url"],
+            video: item["Video Url"],
           });
           return acc;
         }, {});
@@ -121,6 +121,14 @@ const CronberryHelp = () => {
       .catch((err) => {
         toast.error("Unable to fetch data from sheet");
       });
+  };
+
+  const getPreviewLink = (url) => {
+    const match = url.match(/\/file\/d\/([^/]+)\//);
+    if (match && match[1]) {
+      return `https://drive.google.com/file/d/${match[1]}/preview`;
+    }
+    return url;
   };
 
   const filterData = (searchQuery) => {
@@ -211,9 +219,9 @@ const CronberryHelp = () => {
 
       {/* Content Area */}
       <div className="flex-1 px-4 md:px-10 py-6 overflow-y-auto">
-        <div className="mx-auto w-full h-full">
+        <div className="mx-auto w-full overflow-y-auto">
           {selectedTopic ? (
-            <div className="bg-white shadow-xl rounded-xl p-8 space-y-6 transition-all duration-300 h-full">
+            <div className="bg-white rounded-xl p-8 space-y-6 transition-all duration-300 h-full">
               <div className="flex justify-between items-start border-b border-gray-200 pb-4">
                 <h2 className="text-3xl font-semibold text-blue-800">
                   {selectedTopic.title}
@@ -227,16 +235,25 @@ const CronberryHelp = () => {
                   </p>
                 ))}
               </div>
-
               {selectedTopic.video && (
                 <div className="relative overflow-hidden rounded-xl shadow-md">
                   <iframe
-                    src={selectedTopic.video}
+                    src={getPreviewLink(selectedTopic.video)}
                     title="Help video"
                     className="w-full h-96"
                     loading="lazy"
+                    allow="autoplay"
                     allowFullScreen
                   />
+                  {/* <video controls>
+                    <source src={selectedTopic.video} type="video/webm" />
+                    <source src={selectedTopic.video} type="video/mp4" />
+                    Download the
+                    <a href={selectedTopic.video}>WEBM</a>
+                    or
+                    <a href={selectedTopic.video}>MP4</a>
+                    video.
+                  </video> */}
                 </div>
               )}
 
