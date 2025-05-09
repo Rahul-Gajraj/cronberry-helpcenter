@@ -274,6 +274,7 @@ const CronberryHelp = () => {
               {!selectedTopic.video &&
                 selectedTopic.image &&
                 selectedTopic.image.map((image, idx) => {
+                  // console.log(image);
                   return (
                     <FallbackImage
                       key={idx}
