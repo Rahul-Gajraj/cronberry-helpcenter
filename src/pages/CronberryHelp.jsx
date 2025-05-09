@@ -104,7 +104,9 @@ const CronberryHelp = () => {
           acc[category].push({
             title: item["Title"],
             content: item["Content"],
-            image: item["Image Url"],
+            image: item["Image Url"]
+              ? item["Image Url"].split(",").map((i) => i.trim())
+              : [],
             video: item["Video Url"],
           });
           return acc;
@@ -269,13 +271,18 @@ const CronberryHelp = () => {
                   </video> */}
                 </div>
               )}
-              {!selectedTopic.video && selectedTopic.image && (
-                <FallbackImage
-                  src={selectedTopic.image}
-                  alt={selectedTopic.title}
-                  getPreviewLink={getPreviewLink}
-                />
-              )}
+              {!selectedTopic.video &&
+                selectedTopic.image &&
+                selectedTopic.image.map((image, idx) => {
+                  return (
+                    <FallbackImage
+                      key={idx}
+                      src={image}
+                      alt={selectedTopic.title}
+                      getPreviewLink={getPreviewLink}
+                    />
+                  );
+                })}
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-500 mb-2">
                   Was this article helpful?
