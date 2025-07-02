@@ -66,6 +66,13 @@ const iconMap = {
   Others: <CircleEllipsis size={18} className="inline mr-2 text-blue-600" />,
 };
 
+const parseBoldText = (content) => {
+  const parts = content.split(/\*\*(.*?)\*\*/g);
+  return parts.map((part, index) =>
+    index % 2 === 1 ? <strong key={index}>{part}</strong> : part
+  );
+};
+
 const CronberryHelp = () => {
   const [helpTopics, setHelpTopics] = useState([]);
   const [filteredTopics, setFilteredTopics] = useState([]);
@@ -217,7 +224,7 @@ const CronberryHelp = () => {
                                 : "text-gray-600"
                             }`}
                           >
-                            {topic.title}
+                            {parseBoldText(topic.title)}
                           </li>
                         ))
                       ) : (
@@ -240,13 +247,13 @@ const CronberryHelp = () => {
             <div className="bg-white rounded-xl p-8 space-y-6 transition-all duration-300 h-full">
               <div className="flex justify-between items-start border-b border-gray-200 pb-4">
                 <h2 className="text-3xl font-semibold text-blue-800">
-                  {selectedTopic.title}
+                  {parseBoldText(selectedTopic.title)}
                 </h2>
               </div>
               <div className="prose max-w-none text-gray-800 space-y-4">
                 {selectedTopic.content?.split("\n").map((line, i) => (
                   <p key={i} className="leading-relaxed">
-                    {line}
+                    {parseBoldText(line)}
                   </p>
                 ))}
               </div>
