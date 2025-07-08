@@ -68,8 +68,24 @@ const iconMap = {
 
 const parseBoldText = (content) => {
   const parts = content.split(/\*\*(.*?)\*\*/g);
+  if (!parts || parts.length == 0) {
+    return null;
+  }
+
   return parts.map((part, index) =>
     index % 2 === 1 ? <strong key={index}>{part}</strong> : part
+  );
+};
+
+const renderLiElements = (content) => {
+  const parts = content.split(/(?<!\*)\*(?!\*)([^*]+?)\*(?!\*)/g);
+
+  return (
+    <ul style={{ listStyle: "inside" }} className="leading-relaxed">
+      {parts.map((part, idx) =>
+        idx % 2 === 1 ? <li key={idx}>{part}</li> : part
+      )}
+    </ul>
   );
 };
 
@@ -224,7 +240,8 @@ const CronberryHelp = () => {
                                 : "text-gray-600"
                             }`}
                           >
-                            {parseBoldText(topic.title)}
+                            {/* {parseBoldText(topic.title)} */}
+                            {topic.title}
                           </li>
                         ))
                       ) : (
@@ -247,15 +264,20 @@ const CronberryHelp = () => {
             <div className="bg-white rounded-xl p-8 space-y-6 transition-all duration-300 h-full">
               <div className="flex justify-between items-start border-b border-gray-200 pb-4">
                 <h2 className="text-3xl font-semibold text-blue-800">
-                  {parseBoldText(selectedTopic.title)}
+                  {/* {parseBoldText(selectedTopic.title)} */}
+                  {selectedTopic.title}
                 </h2>
               </div>
               <div className="prose max-w-none text-gray-800 space-y-4">
-                {selectedTopic.content?.split("\n").map((line, i) => (
-                  <p key={i} className="leading-relaxed">
-                    {parseBoldText(line)}
-                  </p>
-                ))}
+                {selectedTopic.content?.split("\n").map((line, i) =>
+                  parseBoldText(line) ? (
+                    <p key={i} className="leading-relaxed">
+                      {parseBoldText(line)}
+                    </p>
+                  ) : (
+                    renderLiElements(line)
+                  )
+                )}
               </div>
               {selectedTopic.video && (
                 <div className="relative overflow-hidden rounded-xl shadow-md">
