@@ -68,24 +68,31 @@ const iconMap = {
 
 const parseBoldText = (content) => {
   const parts = content.split(/\*\*(.*?)\*\*/g);
-  if (!parts || parts.length == 0) {
-    return null;
-  }
 
-  return parts.map((part, index) =>
-    index % 2 === 1 ? <strong key={index}>{part}</strong> : part
+  return parts.map((part, idx) =>
+    idx % 2 === 1 ? (
+      <strong key={`${idx}_strong`}>{part}</strong>
+    ) : (
+      renderLiElements(part, idx)
+    )
   );
 };
 
-const renderLiElements = (content) => {
+const renderLiElements = (content, index) => {
   const parts = content.split(/(?<!\*)\*(?!\*)([^*]+?)\*(?!\*)/g);
 
-  return (
-    <ul style={{ listStyle: "inside" }} className="leading-relaxed">
+  return parts.length > 1 ? (
+    <ul
+      key={`${index}_ul`}
+      style={{ listStyle: "inside" }}
+      className="leading-relaxed"
+    >
       {parts.map((part, idx) =>
-        idx % 2 === 1 ? <li key={idx}>{part}</li> : part
+        idx % 2 === 1 ? <li key={`${idx}_li`}>{part}</li> : part
       )}
     </ul>
+  ) : (
+    parts[0]
   );
 };
 
@@ -269,15 +276,11 @@ const CronberryHelp = () => {
                 </h2>
               </div>
               <div className="prose max-w-none text-gray-800 space-y-4">
-                {selectedTopic.content?.split("\n").map((line, i) =>
-                  parseBoldText(line) ? (
-                    <p key={i} className="leading-relaxed">
-                      {parseBoldText(line)}
-                    </p>
-                  ) : (
-                    renderLiElements(line)
-                  )
-                )}
+                {selectedTopic.content?.split("\n").map((line, i) => (
+                  <div key={i} className="leading-relaxed">
+                    {parseBoldText(line)}
+                  </div>
+                ))}
               </div>
               {selectedTopic.video && (
                 <div className="relative overflow-hidden rounded-xl shadow-md">
